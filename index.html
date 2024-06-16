@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Rickblock, the godlike rickroll blocker</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="icon" href="/cdn/bruh.svg" />
+    <link rel="stylesheet" href="/index.css" />
+  </head>
+  <body class="dark">
+    <section class="main">
+      <h1>
+        The godlike rickroll<br />
+        blocker.
+        <img
+          src="https://cdn.glitch.global/5602d221-012f-4755-addd-fe0ec13ed024/Group%20637.png"
+          aria-hidden
+          title="Rickroll blocker"
+          alt="Rickroll blocker"
+        />
+      </h1>
+      <p>
+        RickBlock is the most efficient &amp; complete rickroll blocker
+        available, with hundreds of websites, videos and gifs blocklisted.
+      </p>
+      <a href="/magic/code.user.js" target="_blank" class="install"
+        >Install userscript</a
+      >
+      <img
+        class="cover"
+        src="https://cdn.glitch.global/5602d221-012f-4755-addd-fe0ec13ed024/23shots_so.png"
+        alt="Cover image"
+      />
+    </section>
+    <section class="everyday">
+      <p>Every day, millions of people get tragically rickrolled</p>
+      <canvas id="everyday-canvas"></canvas>
+      <p>
+        And our job is to make sure that doesn't happen to you. In order to do
+        that, we use game-changing military-grade data-powered open-sourced
+        advanced systems that keep you - and what you own - safe.
+      </p>
+      <p>That's our mission, and we take it seriously.</p>
+    </section>
+    <section class="beforeafter">
+      <h2>And it works on everything</h2>
+      <table>
+        <tr>
+          <th>Unprotected</th>
+          <th>RickBlock</th>
+        </tr>
+        <tr>
+          <td>
+            <img
+              src="https://cdn.glitch.global/5602d221-012f-4755-addd-fe0ec13ed024/is.png"
+              alt="Rickroll link without RickBlock"
+            />
+          </td>
+          <td>
+            <img
+              src="https://cdn.glitch.global/5602d221-012f-4755-addd-fe0ec13ed024/was.png"
+              alt="Rickroll link with Rickblock, clearly marked as a rickroll"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img
+              src="https://cdn.glitch.global/5602d221-012f-4755-addd-fe0ec13ed024/wp9414303-2214611039.jpg"
+              alt="Example rickroll picture"
+            />
+          </td>
+          <td>
+            <img
+              src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2tibDBoZndmZ3lnZnd6OThuY3FoeTgyMDhvZ2VyYXQzY3RkejFkeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/0A7TaeTWGNsMn3AiJc/giphy.gif"
+              alt="Rickroll blocked example"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img
+              src="https://cdn.glitch.global/5602d221-012f-4755-addd-fe0ec13ed024/d4f4e8d5-be1e-402d-ab1e-89439601de26.image.png"
+              alt="Rickroll youtube thumbnail"
+            />
+          </td>
+          <td>
+            <img
+              src="https://cdn.glitch.global/5602d221-012f-4755-addd-fe0ec13ed024/23shots_so.png"
+              alt="Block page"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img
+              src="https://cdn.glitch.global/5602d221-012f-4755-addd-fe0ec13ed024/Frame%20482539.png?v=1718564397792"
+              alt="Custom rickroll"
+            />
+          </td>
+          <td>
+            <img
+              src="https://cdn.glitch.global/5602d221-012f-4755-addd-fe0ec13ed024/23shots_so.png"
+              alt="Block page"
+            />
+          </td>
+        </tr>
+      </table>
+      <a href="/magic/code.user.js" target="_blank" class="install"
+        >Install userscript</a
+      >
+      <p class="contact" style="margin-bottom: 5em">
+        False positive? New links? Feedback?
+        <a href="https://tiagorangel.com/feedback">Contact me</a><br />Made by
+        <a href="https://tiagorangel.com/">Tiago Rangel</a>
+      </p>
+    </section>
+  </body>
+  <script src="https://tiagorangel.com/cdn/widget.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const props = {
+        shapeType: "Square",
+        size: 10,
+        gap: 2,
+        primaryColor: "#ec1e44",
+        secondaryColor: "#303030",
+        radius: 0,
+        probability: 4,
+        animSpeed: 90,
+      };
+
+      const canvas = document.getElementById("everyday-canvas");
+      const ctx = canvas.getContext("2d");
+
+      const formattedPrimaryColor = props.primaryColor;
+      const formattedSecondaryColor = props.secondaryColor;
+
+      const adjustCanvasSize = () => {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      };
+
+      const getColor = () =>
+        Math.random() < props.probability / 100
+          ? formattedPrimaryColor
+          : formattedSecondaryColor;
+
+      const initialize = (width, height) => {
+        const shapes = [];
+        for (let y = 0; y < height; y += props.size + props.gap) {
+          for (let x = 0; x < width; x += props.size + props.gap) {
+            shapes.push({
+              x,
+              y,
+              delay: Math.random() * (-99.9 * props.animSpeed + 10099.9),
+              duration: Math.random() * (-99.9 * props.animSpeed + 10099.9),
+              startTime: performance.now() + Math.random() * 5000,
+              color: getColor(),
+              shapeType: props.shapeType,
+              radius: props.size / 2,
+            });
+          }
+        }
+        return shapes;
+      };
+
+      const draw = (shapes) => {
+        const currentTime = performance.now();
+        shapes.forEach((shape) => {
+          let timeElapsed = currentTime - shape.startTime;
+          if (timeElapsed > shape.delay + shape.duration) {
+            shape.startTime = currentTime + shape.delay;
+            shape.color = getColor();
+          }
+          ctx.fillStyle = shape.color;
+          if (shape.shapeType === "Square") {
+            ctx.fillRect(shape.x, shape.y, props.size, props.size);
+          } else {
+            ctx.beginPath();
+            ctx.arc(
+              shape.x + shape.radius,
+              shape.y + shape.radius,
+              shape.radius,
+              0,
+              2 * Math.PI
+            );
+            ctx.fill();
+          }
+        });
+      };
+
+      const render = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        draw(shapes);
+        requestAnimationFrame(render);
+      };
+
+      let shapes = [];
+      adjustCanvasSize();
+      shapes = initialize(canvas.width, canvas.height);
+      requestAnimationFrame(render);
+
+      window.addEventListener("resize", () => {
+        adjustCanvasSize();
+        shapes = initialize(canvas.width, canvas.height);
+      });
+
+      setTimeout(async function () {
+        if (!document.body.getAttribute("data-rickblock-version")) {
+          return;
+        }
+        const el = document.createElement("div");
+        el.classList.add("installed");
+        el.innerText = `RickBlock ${document.body.getAttribute(
+          "data-rickblock-version"
+        )} is already installed. Thanks!`;
+        document.body.appendChild(el);
+
+        document.querySelectorAll(".install").forEach((e) => {
+          e.innerText = "Re-install userscript";
+        });
+
+        const latest = await (await fetch("/magic/latest_version.txt")).text();
+        if (
+          !(latest === document.body.getAttribute("data-rickblock-version"))
+        ) {
+          el.innerHTML = `Update found (${document.body.getAttribute(
+            "data-rickblock-version"
+          )} -&gt; ${latest}). <a href="/magic/code.user.js" target="_blank" style="color: rgb(23, 22, 13);">Update</a>`;
+          el.style.backgroundColor = "#ded274c2";
+
+          document.querySelectorAll(".install").forEach((e) => {
+            e.innerText = "Update userscript";
+          });
+        }
+      }, 100);
+    });
+  </script>
+</html>
