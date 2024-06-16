@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <meta name="color-scheme" content="light dark" />
+    <title>Rickroll detected</title>
+    <link
+      rel="stylesheet"
+      href="/magic/block/style.css"
+      type="text/css"
+      media="all"
+    />
+    <link rel="icon" id="favicon" href="/cdn/bruh.svg" />
+  </head>
+
+  <body>
+    <main>
+      <img src="/cdn/fav.svg" alt=" " />
+      <h1>Someone might have tried to rickroll you.</h1>
+
+      <p>
+        RickBlock (rblock.glitch.me) has detected a rickroll on the website you visited. The
+        website you visited may be trying to trick you.
+      </p>
+      <p>
+        Tapping "Continue anyways" will also automatically ignore this screen on any website for the next 10 minutes. False positive? <a href="https://tiagorangel.com/contact" target="_blank">Send feedback</a>
+      </p>
+
+      <div class="buttons">
+        <button onclick="ignore()" class="primary">Continue anyways</button>
+      </div>
+    </main>
+  </body>
+  <script>
+    const url = atob(
+      decodeURIComponent(new URL(location.href).searchParams.get("origin"))
+    );
+
+    function ignore() {
+      const separator = url.includes("?") ? "&" : "?";
+      document.location.replace(url + separator + "active=skip");
+    }
+  </script>
+</html>
