@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         RickBlock
 // @namespace    https://rblock.glitch.me/
-// @version      1.2.8
+// @version      1.2.11
 // @description  The godlike rickroll blocker.
 // @author       Tiago Rangel
-// @match        https://*/*
+// @match        http*://*/*
+// @include      *
 // @icon         https://rblock.glitch.me/cdn/fav.svg
 // @run-at       document-idle
 // @updateURL    https://rblock.glitch.me/magic/code.user.js
@@ -12,6 +13,10 @@
 // @grant        GM.getValue
 // @grant        GM.setValue
 // @grant        GM.deleteValue
+// @grant        unsafeWindow
+// @grant        GM_registerMenuCommand
+// @grant        GM_unregisterMenuCommand
+// @connect      abacus.jasoncameron.dev
 // ==/UserScript==
 
 /*
@@ -41,7 +46,7 @@ Do not redestribute.
 */
 
 (function (GM) {
-  const __version__ = "1.2.8";
+  const __version__ = "1.2.11";
 
   const settings = {
     allow:
@@ -151,8 +156,8 @@ Do not redestribute.
     },
   };
 
-  const $ = (e) => document.querySelector(e);
-  const $$ = (e) => document.querySelectorAll(e);
+  const $ = (e) => (unsafeWindow || window).document.querySelector(e);
+  const $$ = (e) => (unsafeWindow || window).document.querySelectorAll(e);
 
   const detect = {
     detect: function (link) {
@@ -212,6 +217,7 @@ Do not redestribute.
         if (detect.detect(img.src)) {
           img.src =
             "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2tibDBoZndmZ3lnZnd6OThuY3FoeTgyMDhvZ2VyYXQzY3RkejFkeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/0A7TaeTWGNsMn3AiJc/giphy.gif";
+          count("block-img");
         }
       });
       $$("video").forEach((vid) => {
@@ -222,6 +228,7 @@ Do not redestribute.
             "https://cdn.glitch.global/5602d221-012f-4755-addd-fe0ec13ed024/ezgif-2-2a9edb3674.mp4"
           );
           vid.setAttribute("loop", "true");
+          count("block-vid");
         }
       });
     },
@@ -230,18 +237,28 @@ Do not redestribute.
         return false;
       }
 
-      if (
-        document.body.innerText
-          .toLowerCase()
-          .replaceAll("0", "o")
-          .replaceAll("1", "l")
-          .replaceAll(" ", "")
-          .replaceAll("\n", "")
-          .replaceAll("€", "e")
-          .replaceAll("<--", "")
-          .replaceAll("-->", "")
-          .includes("rickrolled")
-      ) {
+      let foundBlocklist = false;
+
+      const blocklist = ["yougotrickrolled", "rickrolled!", "gotrickrolled"];
+
+      blocklist.forEach((block) => {
+        if (
+          document.body.innerText
+            .toLowerCase()
+            .replaceAll("0", "o")
+            .replaceAll("1", "l")
+            .replaceAll(" ", "")
+            .replaceAll("\n", "")
+            .replaceAll("€", "e")
+            .replaceAll("<--", "")
+            .replaceAll("-->", "")
+            .includes(block.trim())
+        ) {
+          foundBlocklist = true;
+        }
+      });
+
+      if (foundBlocklist) {
         return true;
       }
 
@@ -277,11 +294,20 @@ Do not redestribute.
     return false;
   };
 
+  const count = function (value) {
+    GM_xmlhttpRequest({
+      method: "GET",
+      url: `https://abacus.jasoncameron.dev/hit/rickblock/${value}`,
+      fetch: true,
+      anonymous: true,
+    });
+  };
+
   const main = async function () {
     if (location.hostname === "rblock.glitch.me") {
-      $("body").setAttribute("data-rickblock-version", __version__)
+      $("body").setAttribute("data-rickblock-version", __version__);
     }
-    
+
     let allowed = false;
 
     settings.allow.split(", ").forEach(function (e) {
@@ -293,6 +319,7 @@ Do not redestribute.
     const checkAll = async function () {
       detect.links();
       detect.media();
+
       if (await hasSkip()) {
         return;
       }
@@ -315,6 +342,24 @@ Do not redestribute.
 
     setInterval(checkAll, 2000);
     checkAll();
+
+    if (await hasSkip()) {
+      GM_registerMenuCommand(
+        "Re-enable detection",
+        function () {
+          GM.setValue(
+            "skip",
+            JSON.stringify({
+              expires: Date.now() + 10 * 60 * 1000,
+            })
+          );
+          GM_unregisterMenuCommand("disable");
+        },
+        { id: "disable" }
+      );
+    } else {
+      GM_unregisterMenuCommand("disable");
+    }
   };
 
   main();

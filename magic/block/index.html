@@ -35,8 +35,11 @@
     );
 
     function ignore() {
+      fetch("https://abacus.jasoncameron.dev/hit/rickblock/skip");
       const separator = url.includes("?") ? "&" : "?";
       document.location.replace(url + separator + "active=skip");
     }
+    
+    fetch("https://abacus.jasoncameron.dev/hit/rickblock/blocked");
   </script>
 </html>
