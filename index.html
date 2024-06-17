@@ -229,7 +229,7 @@
         ) {
           el.innerHTML = `Update found (${document.body.getAttribute(
             "data-rickblock-version"
-          )} -&gt; ${latest}). <a href="/magic/code.user.js" target="_blank" style="color: rgb(23, 22, 13);">Update</a>`;
+          )} -&gt; ${latest}). <a href="/magic/code.user.js" target="_blank" style="color: rgb(23, 22, 13);" onclick="this.parentElement.remove();">Update</a>`;
           el.style.backgroundColor = "#ded274c2";
 
           document.querySelectorAll(".install").forEach((e) => {
